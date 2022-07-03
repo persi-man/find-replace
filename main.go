@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -22,20 +24,56 @@ func ProcessLine(line, old, new string) (found bool, res string, occ int) {
 	if strings.Contains(line, oldLower) || strings.Contains(line, old) || strings.Contains(line, oldUpper) {
 		found = true
 		//Number of occurences
-		occ += strings.Count(line, oldLower)
-		occ += strings.Count(line, old)
-		occ += strings.Count(line, oldUpper)
+		occ += strings.Count(res, oldLower)
+		occ += strings.Count(res, old)
+		occ += strings.Count(res, oldUpper)
 		//Result
 		res = strings.Replace(line, oldLower, newLower, -1)
-		res = strings.Replace(line, old, new, -1)
-		res = strings.Replace(line, oldUpper, newUpper, -1)
+		res = strings.Replace(res, old, new, -1)
+		res = strings.Replace(res, oldUpper, newUpper, -1)
 	}
 
 	return found, res, occ
 
 }
 
+/**
+-FindReplaceFile searchrd for old and replace by new using ProcessLine in the file
+-Return number of occurences,number of lines on the file with "Go" and an error
+*/
+func FindReplaceFile(src, old, new string) (occ int, lines []int, err error) {
+	srcFile, err := os.Open(src)
+	if err != nil {
+		return occ, lines, err
+	}
+	defer srcFile.Close()
+	indexLine := 1
+	scanner := bufio.NewScanner(srcFile)
+
+	for scanner.Scan() {
+		found, res, oc := ProcessLine(scanner.Text(), old, new)
+		if found {
+			occ += oc
+			lines = append(lines, indexLine)
+
+		}
+		fmt.Println(res)
+		indexLine++
+
+	}
+	return occ, lines, nil
+}
+
 func main() {
-	_, res, occ := ProcessLine("Go was publicly announced in November 2009,[23] and version 1.0 was released in March 2012.[24][25] Go is widely used in production at Google[26] and in many other organizations and open-source projects .In April 2018, the original logo (Gopher mascot) was replaced with a stylized GO slanting right with trailing streamlines. However, the mascot remained the same.[27]", "Go", "Python")
-	fmt.Printf("Result:%s\n Number of occurences:%d\n", res, occ)
+	old := " Go "
+	new := "Python"
+	occ, lines, err := FindReplaceFile("wikigo.txt", old, new)
+	if err != nil {
+		fmt.Printf("Error while executing find replace  %v\n", err)
+	}
+	fmt.Println("---- Start replace ----")
+	defer fmt.Println("---- End of Replace ----")
+	fmt.Printf("Number of occurences of \"%v\":%v\n", old, occ)
+	fmt.Printf("Number of lines :%d\n", len(lines))
+
 }

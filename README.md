@@ -1,7 +1,10 @@
 # Find & Replace
 ***
-## Author: Persi
-links to my profiles:  [Gitlab](https://gitlab.com/persimankita), [LinkedIn](https://linkedin.com/in/persimankita), [CodinGame](https://www.codingame.com/profile/78d8c6b619df32d41a0492ed5dc38b707394384)
+## Author: Persi MANKITA
+Links to my profiles:
+- [Gitlab](https://gitlab.com/persimankita)
+- [LinkedIn](https://linkedin.com/in/persimankita)
+- [CodinGame](https://www.codingame.com/profile/78d8c6b619df32d41a0492ed5dc38b707394384)
 ***
 ```
 First codes in Golang allowing to search a word in a file and replace it by another.

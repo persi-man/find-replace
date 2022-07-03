@@ -47,6 +47,9 @@ func FindReplaceFile(src, old, new string) (occ int, lines []int, err error) {
 		return occ, lines, err
 	}
 	defer srcFile.Close()
+	old = old + " "
+	new = new + " "
+
 	indexLine := 1
 	scanner := bufio.NewScanner(srcFile)
 
@@ -65,15 +68,25 @@ func FindReplaceFile(src, old, new string) (occ int, lines []int, err error) {
 }
 
 func main() {
-	old := " Go "
+	old := "Go"
 	new := "Python"
 	occ, lines, err := FindReplaceFile("wikigo.txt", old, new)
 	if err != nil {
 		fmt.Printf("Error while executing find replace  %v\n", err)
 	}
-	fmt.Println("---- Start replace ----")
-	defer fmt.Println("---- End of Replace ----")
+	fmt.Println("---- Start replace stats ----")
+	defer fmt.Println("---- End of Replace stats ----")
 	fmt.Printf("Number of occurences of \"%v\":%v\n", old, occ)
 	fmt.Printf("Number of lines :%d\n", len(lines))
+	//Lines with "Go"
+	fmt.Print("In lines [ ")
+	len := len(lines)
+	for i, j := range lines {
+		fmt.Printf("%v", j)
+		if i < len-1 {
+			fmt.Printf(" - ")
+		}
+	}
+	fmt.Println(" ]")
 
 }

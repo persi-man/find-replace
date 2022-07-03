@@ -14,3 +14,5 @@ For this first test, I just copied a part of the wikipedia documentation of go a
 - Creation of the "ProcessLine" function allowing to search and replace a word in a line.
 
 - Creation of the "FindReplaceFile" function allowing to search and replace a word in a whole file line
+
+    - Add all the modification on a new file

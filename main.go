@@ -41,18 +41,26 @@ func ProcessLine(line, old, new string) (found bool, res string, occ int) {
 -FindReplaceFile searchrd for old and replace by new using ProcessLine in the file
 -Return number of occurences,number of lines on the file with "Go" and an error
 */
-func FindReplaceFile(src, old, new string) (occ int, lines []int, err error) {
+func FindReplaceFile(src, dst, old, new string) (occ int, lines []int, err error) {
 	srcFile, err := os.Open(src)
 	if err != nil {
 		return occ, lines, err
 	}
 	defer srcFile.Close()
+	//Destination file
+	dstFile, err := os.Create(dst)
+	if err != nil {
+		return occ, lines, err
+	}
+	defer dstFile.Close()
+
 	old = old + " "
 	new = new + " "
 
 	indexLine := 1
 	scanner := bufio.NewScanner(srcFile)
-
+	writer := bufio.NewWriter(dstFile)
+	defer writer.Flush() //Vider le buffer
 	for scanner.Scan() {
 		found, res, oc := ProcessLine(scanner.Text(), old, new)
 		if found {
@@ -60,7 +68,7 @@ func FindReplaceFile(src, old, new string) (occ int, lines []int, err error) {
 			lines = append(lines, indexLine)
 
 		}
-		fmt.Println(res)
+		fmt.Fprintf(writer, res)
 		indexLine++
 
 	}
@@ -70,7 +78,7 @@ func FindReplaceFile(src, old, new string) (occ int, lines []int, err error) {
 func main() {
 	old := "Go"
 	new := "Python"
-	occ, lines, err := FindReplaceFile("wikigo.txt", old, new)
+	occ, lines, err := FindReplaceFile("wikigo.txt", "wikigoToPython.txt", old, new)
 	if err != nil {
 		fmt.Printf("Error while executing find replace  %v\n", err)
 	}
